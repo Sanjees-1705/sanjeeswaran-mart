@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sanjeeswaran-Mart Buyer</title>
+
+    <link rel="stylesheet" href="buyer.css">
+</head>
+
+<body>
+
+    <header class="top-header">
+        <h1>🛒 Sanjeeswaran-Mart</h1>
+
+        <nav>
+            <button onclick="showProducts()">Products</button>
+            <button onclick="showCart()">🛒 Cart</button>
+            <button onclick="showWishlist()">❤️ Wishlist</button>
+            <button onclick="logout()">Logout</button>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="welcome-section">
+            <h2>Welcome, Buyer!</h2>
+            <p>Browse products and start shopping.</p>
+        </section>
+
+        <section id="productsSection">
+
+            <h2>Products</h2>
+
+            <div class="product-container">
+
+                <div class="product-card">
+                    <h3>Product 1</h3>
+                    <p>Sample product</p>
+                    <p class="price">₹500</p>
+
+                    <button onclick="addToCart('Product 1', 500)">
+                        Add to Cart
+                    </button>
+
+                    <button onclick="addToWishlist('Product 1')">
+                        ❤️ Wishlist
+                    </button>
+                </div>
+
+                <div class="product-card">
+                    <h3>Product 2</h3>
+                    <p>Sample product</p>
+                    <p class="price">₹750</p>
+
+                    <button onclick="addToCart('Product 2', 750)">
+                        Add to Cart
+                    </button>
+
+                    <button onclick="addToWishlist('Product 2')">
+                        ❤️ Wishlist
+                    </button>
+                </div>
+
+                <div class="product-card">
+                    <h3>Product 3</h3>
+                    <p>Sample product</p>
+                    <p class="price">₹1000</p>
+
+                    <button onclick="addToCart('Product 3', 1000)">
+                        Add to Cart
+                    </button>
+
+                    <button onclick="addToWishlist('Product 3')">
+                        ❤️ Wishlist
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="buyer.js"></script>
+
+</body>
+</html>

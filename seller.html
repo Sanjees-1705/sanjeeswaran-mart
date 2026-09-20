@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sanjeeswaran-Mart Seller</title>
+
+    <link rel="stylesheet" href="seller.css">
+</head>
+
+<body>
+
+    <header class="top-header">
+
+        <h1>🛒 Sanjeeswaran-Mart</h1>
+
+        <nav>
+            <button onclick="showProducts()">My Products</button>
+            <button onclick="addProduct()">Add Product</button>
+            <button onclick="logout()">Logout</button>
+        </nav>
+
+    </header>
+
+    <main>
+
+        <section class="welcome-section">
+
+            <h2>Welcome, Seller!</h2>
+
+            <p>Manage your products from here.</p>
+
+        </section>
+
+        <section id="productsSection">
+
+            <h2>My Products</h2>
+
+            <div class="product-container">
+
+                <div class="product-card">
+
+                    <h3>Sample Product</h3>
+
+                    <p>Example seller product</p>
+
+                    <p class="price">₹500</p>
+
+                    <button onclick="editProduct()">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteProduct()">
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="seller.js"></script>
+
+</body>
+</html>
