@@ -1,7 +1,7 @@
 const registerForm = document.getElementById("registerForm");
 const message = document.getElementById("message");
 
-registerForm.addEventListener("submit", function (event) {
+registerForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const name = document.getElementById("name").value.trim();
@@ -28,12 +28,38 @@ registerForm.addEventListener("submit", function (event) {
         return;
     }
 
-    message.textContent = "Account created successfully!";
-    message.style.color = "green";
+    try {
+        const response = await fetch("/api/users/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password,
+                role: role
+            })
+        });
 
-    setTimeout(function () {
-        window.location.href = "login.html";
-    }, 1500);
+        if (!response.ok) {
+            throw new Error("Registration failed");
+        }
+
+        message.textContent = "Account created successfully!";
+        message.style.color = "green";
+
+        registerForm.reset();
+
+        setTimeout(function () {
+            window.location.href = "login.html";
+        }, 1500);
+
+    } catch (error) {
+        message.textContent = "Registration failed. Please try again.";
+        message.style.color = "red";
+        console.error(error);
+    }
 });
 
 function goToLogin() {
