@@ -9,15 +9,12 @@ function loadCart() {
     const cartTotal =
         document.getElementById("cartTotal");
 
-
     let cart =
         JSON.parse(
             localStorage.getItem("cart")
         ) || [];
 
-
     cartItems.innerHTML = "";
-
 
     if (cart.length === 0) {
 
@@ -29,9 +26,7 @@ function loadCart() {
         return;
     }
 
-
     let total = 0;
-
 
     cart.forEach(function (item, index) {
 
@@ -40,13 +35,11 @@ function loadCart() {
 
         total += itemTotal;
 
-
         const cartItem =
             document.createElement("div");
 
         cartItem.className =
             "cart-item";
-
 
         cartItem.innerHTML = `
 
@@ -91,15 +84,12 @@ function loadCart() {
 
         `;
 
-
         cartItems.appendChild(cartItem);
 
     });
 
-
     cartTotal.innerHTML =
         "Total: ₹" + total;
-
 }
 
 
@@ -113,15 +103,12 @@ function increaseQuantity(index) {
             localStorage.getItem("cart")
         ) || [];
 
-
     cart[index].quantity += 1;
-
 
     localStorage.setItem(
         "cart",
         JSON.stringify(cart)
     );
-
 
     loadCart();
 }
@@ -137,7 +124,6 @@ function decreaseQuantity(index) {
             localStorage.getItem("cart")
         ) || [];
 
-
     if (cart[index].quantity > 1) {
 
         cart[index].quantity -= 1;
@@ -148,12 +134,10 @@ function decreaseQuantity(index) {
 
     }
 
-
     localStorage.setItem(
         "cart",
         JSON.stringify(cart)
     );
-
 
     loadCart();
 }
@@ -169,15 +153,12 @@ function removeFromCart(index) {
             localStorage.getItem("cart")
         ) || [];
 
-
     cart.splice(index, 1);
-
 
     localStorage.setItem(
         "cart",
         JSON.stringify(cart)
     );
-
 
     loadCart();
 }
@@ -195,21 +176,9 @@ function continueShopping() {
 
 
 /*
-    Load cart when page opens
-*/
-window.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadCart();
-
-    }
-);
-
-/*
     Place Order
 */
-function placeOrder() {
+async function placeOrder() {
 
     let cart =
         JSON.parse(
@@ -227,8 +196,26 @@ function placeOrder() {
     }
 
 
-    let total = 0;
+    const userId =
+        localStorage.getItem(
+            "loggedInUserId"
+        );
 
+
+    if (!userId) {
+
+        alert(
+            "Please login before placing an order."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    let total = 0;
 
     cart.forEach(function (item) {
 
@@ -243,34 +230,96 @@ function placeOrder() {
         Date.now();
 
 
-    localStorage.setItem(
-        "lastOrderId",
-        orderId
-    );
+    const orderData = {
+
+        orderId: orderId,
+
+        userId: Number(userId),
+
+        totalAmount: total,
+
+        status: "Order Placed"
+
+    };
 
 
-    localStorage.setItem(
-        "lastOrderTotal",
-        total
-    );
+    try {
+
+        const response =
+            await fetch(
+                "/api/orders",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            orderData
+                        )
+                }
+            );
 
 
-    localStorage.setItem(
-        "lastOrderItems",
-        JSON.stringify(cart)
-    );
+        if (!response.ok) {
+
+            throw new Error(
+                "Order failed"
+            );
+
+        }
 
 
-    /*
-        Clear cart
-    */
-    localStorage.removeItem("cart");
+        const savedOrder =
+            await response.json();
 
 
-    /*
-        Go to order success page
-    */
-    window.location.href =
-        "order-success.html";
+        localStorage.setItem(
+            "lastOrderId",
+            savedOrder.orderId
+        );
+
+        localStorage.setItem(
+            "lastOrderTotal",
+            savedOrder.totalAmount
+        );
+
+        localStorage.setItem(
+            "lastOrderItems",
+            JSON.stringify(cart)
+        );
+
+
+        localStorage.removeItem(
+            "cart"
+        );
+
+
+        window.location.href =
+            "order-success.html";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Failed to place order. Please try again."
+        );
+
+    }
 
 }
+
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadCart();
+
+    }
+);

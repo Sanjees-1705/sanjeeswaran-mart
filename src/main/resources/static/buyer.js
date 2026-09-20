@@ -1,21 +1,30 @@
-/*
-    Show Products
-*/
 function showProducts() {
+    const productsSection = document.getElementById("productsSection");
 
-    document
-        .getElementById("productsSection")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+    productsSection.scrollIntoView({
+        behavior: "smooth"
+    });
 
     loadProducts();
 }
 
+function showCart() {
+    window.location.href = "cart.html";
+}
 
-/*
-    Load Products from Database
-*/
+function showWishlist() {
+    window.location.href = "wishlist.html";
+}
+
+function showOrders() {
+    window.location.href = "orders.html";
+}
+
+function logout() {
+    localStorage.removeItem("loggedInUserId");
+    window.location.href = "login.html";
+}
+
 async function loadProducts() {
 
     const productContainer =
@@ -38,11 +47,10 @@ async function loadProducts() {
         if (products.length === 0) {
 
             productContainer.innerHTML =
-                "<p>No products available yet.</p>";
+                "<p>No products available.</p>";
 
             return;
         }
-
 
         products.forEach(function (product) {
 
@@ -51,7 +59,6 @@ async function loadProducts() {
 
             productCard.className =
                 "product-card";
-
 
             productCard.innerHTML = `
 
@@ -62,16 +69,17 @@ async function loadProducts() {
                         width: 200px;
                         height: 200px;
                         object-fit: cover;
-                        border-radius: 8px;
                     "
                 >
 
                 <h3>${product.name}</h3>
 
-                <p>${product.description}</p>
+                <p>
+                    ${product.description}
+                </p>
 
-                <p class="price">
-                    ₹${product.price}
+                <p>
+                    Price: ₹${product.price}
                 </p>
 
                 <p>
@@ -79,21 +87,13 @@ async function loadProducts() {
                 </p>
 
                 <button
-                    onclick="addToCart(
-                        ${product.id},
-                        '${product.name.replace(/'/g, "\\'")}',
-                        ${product.price}
-                    )"
-                    ${product.stock <= 0 ? "disabled" : ""}
+                    onclick="addToCart(${product.id}, '${product.name}', ${product.price})"
                 >
-                    ${product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+                    🛒 Add to Cart
                 </button>
 
                 <button
-                    onclick="addToWishlist(
-                        '${product.name.replace(/'/g, "\\'")}',
-                         ${product.price}
-                    )"
+                    onclick="addToWishlist(${product.id}, '${product.name}', ${product.price})"
                 >
                     ❤️ Wishlist
                 </button>
@@ -112,32 +112,18 @@ async function loadProducts() {
             "<p>Failed to load products.</p>";
 
     }
-
 }
 
 
-/*
-    Add Product to Cart
-*/
-function addToCart(
-    productId,
-    productName,
-    price
-) {
+function addToCart(id, name, price) {
 
     let cart =
-        JSON.parse(
-            localStorage.getItem("cart")
-        ) || [];
-
+        JSON.parse(localStorage.getItem("cart")) || [];
 
     const existingProduct =
         cart.find(function (item) {
-
-            return item.id === productId;
-
+            return item.id === id;
         });
-
 
     if (existingProduct) {
 
@@ -146,87 +132,44 @@ function addToCart(
     } else {
 
         cart.push({
-
-            id: productId,
-
-            name: productName,
-
+            id: id,
+            name: name,
             price: price,
-
             quantity: 1
-
         });
 
     }
-
 
     localStorage.setItem(
         "cart",
         JSON.stringify(cart)
     );
 
-
-    alert(
-        productName +
-        " added to cart."
-    );
-
+    alert(name + " added to cart.");
 }
 
 
-/*
-    Open Cart
-*/
-function showCart() {
-
-    window.location.href =
-        "cart.html";
-
-}
-
-
-/*
-    Wishlist
-*/
-function showWishlist() {
-
-    window.location.href =
-        "wishlist.html";
-
-}
-
-
-/*
-    Add to Wishlist
-*/
-function addToWishlist(
-    productName,
-    productPrice
-) {
+function addToWishlist(id, name, price) {
 
     let wishlist =
-        JSON.parse(
-            localStorage.getItem("wishlist")
-        ) || [];
+        JSON.parse(localStorage.getItem("wishlist")) || [];
 
     const existingProduct =
         wishlist.find(function (item) {
-            return item.name === productName;
+            return item.id === id;
         });
 
     if (existingProduct) {
 
-        alert(
-            productName +
-            " is already in wishlist."
-        );
+        alert(name + " is already in wishlist.");
 
         return;
     }
 
     wishlist.push({
-        name: productName,
-        price: productPrice
+        id: id,
+        name: name,
+        price: price
     });
 
     localStorage.setItem(
@@ -234,40 +177,13 @@ function addToWishlist(
         JSON.stringify(wishlist)
     );
 
-    alert(
-        productName +
-        " added to wishlist."
-    );
-
+    alert(name + " added to wishlist.");
 }
 
 
-/*
-    Logout
-*/
-function logout() {
-
-    window.location.href =
-        "login.html";
-
-}
-
-function showOrders() {
-
-    window.location.href =
-        "orders.html";
-
-}
-
-
-/*
-    Automatically load products
-*/
 window.addEventListener(
     "DOMContentLoaded",
     function () {
-
         loadProducts();
-
     }
 );

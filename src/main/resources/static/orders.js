@@ -1,137 +1,139 @@
 /*
     Load Orders
 */
-
-function loadOrders() {
+async function loadOrders() {
 
     const ordersList =
         document.getElementById("ordersList");
 
+    const userId =
+        localStorage.getItem(
+            "loggedInUserId"
+        );
 
-    const orderId =
-        localStorage.getItem("lastOrderId");
-
-    const orderTotal =
-        localStorage.getItem("lastOrderTotal");
-
-    const orderItems =
-        JSON.parse(
-            localStorage.getItem("lastOrderItems")
-        ) || [];
-
-
-    /*
-        Check if order exists
-    */
-
-    if (!orderId || orderItems.length === 0) {
+    if (!userId) {
 
         ordersList.innerHTML = `
-
             <div class="empty-orders">
-
-                <h3>
-                    No orders yet.
-                </h3>
-
-                <p>
-                    Your placed orders will appear here.
-                </p>
-
+                <h3>Please login first.</h3>
             </div>
-
         `;
 
         return;
     }
 
 
-    /*
-        Create order card
-    */
+    try {
 
-    const orderCard =
-        document.createElement("div");
-
-    orderCard.className =
-        "order-card";
+        const response =
+            await fetch(
+                "/api/orders/user/" + userId
+            );
 
 
-    let itemsHTML = "";
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load orders"
+            );
+
+        }
 
 
-    orderItems.forEach(function (item) {
-
-        const itemTotal =
-            item.price * item.quantity;
+        const orders =
+            await response.json();
 
 
-        itemsHTML += `
+        ordersList.innerHTML = "";
 
-            <div class="order-item">
 
-                <strong>
-                    ${item.name}
-                </strong>
+        if (orders.length === 0) {
+
+            ordersList.innerHTML = `
+
+                <div class="empty-orders">
+
+                    <h3>
+                        No orders yet.
+                    </h3>
+
+                    <p>
+                        Your placed orders will appear here.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        orders.forEach(function (order) {
+
+            const orderCard =
+                document.createElement("div");
+
+            orderCard.className =
+                "order-card";
+
+
+            orderCard.innerHTML = `
+
+                <h3>
+                    Order ID: ${order.orderId}
+                </h3>
 
                 <p>
-                    Price: ₹${item.price}
+                    Status:
+                    <strong>
+                        ${order.status}
+                    </strong>
                 </p>
 
-                <p>
-                    Quantity: ${item.quantity}
+                <p class="order-total">
+                    Total Amount:
+                    ₹${order.totalAmount}
                 </p>
 
+            `;
+
+
+            ordersList.appendChild(
+                orderCard
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        ordersList.innerHTML = `
+
+            <div class="empty-orders">
+
+                <h3>
+                    Failed to load orders.
+                </h3>
+
                 <p>
-                    Item Total: ₹${itemTotal}
+                    Please try again.
                 </p>
 
             </div>
 
         `;
 
-    });
-
-
-    orderCard.innerHTML = `
-
-        <h3>
-            Order ID: ${orderId}
-        </h3>
-
-        <p>
-            Status:
-            <strong>Order Placed</strong>
-        </p>
-
-        <div class="order-items">
-
-            <h4>
-                Ordered Products
-            </h4>
-
-            ${itemsHTML}
-
-        </div>
-
-        <p class="order-total">
-            Total Amount: ₹${orderTotal}
-        </p>
-
-    `;
-
-
-    ordersList.appendChild(
-        orderCard
-    );
+    }
 
 }
 
 
 /*
-    Back to Buyer Page
+    Back to Products
 */
-
 function goBack() {
 
     window.location.href =
@@ -141,9 +143,8 @@ function goBack() {
 
 
 /*
-    Load orders when page opens
+    Automatically Load Orders
 */
-
 window.addEventListener(
     "DOMContentLoaded",
     function () {

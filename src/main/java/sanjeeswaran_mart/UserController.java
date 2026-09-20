@@ -22,21 +22,21 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
 
-        User existingUser = userRepository.findByEmail(user.getEmail());
+        User existingUser =
+                userRepository.findByEmailAndRole(
+                        user.getEmail(),
+                        user.getRole()
+                );
 
         if (existingUser == null) {
+
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid email, password or role.");
         }
 
         if (!existingUser.getPassword().equals(user.getPassword())) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid email, password or role.");
-        }
 
-        if (!existingUser.getRole().equals(user.getRole())) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid email, password or role.");
