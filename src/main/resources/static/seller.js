@@ -126,11 +126,11 @@ async function loadProducts() {
 /*
     Edit Product
 */
+
 function editProduct(id) {
 
-    alert(
-        "Edit Product feature will be added next."
-    );
+    window.location.href =
+        "edit-product.html?id=" + id;
 
 }
 

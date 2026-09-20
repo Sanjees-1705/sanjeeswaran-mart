@@ -22,6 +22,9 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
+    /*
+        Add Product
+    */
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(
             @RequestParam("name") String name,
@@ -53,7 +56,8 @@ public class ProductController {
                     "/uploads/" + fileName
             );
 
-            Product savedProduct = productRepository.save(product);
+            Product savedProduct =
+                    productRepository.save(product);
 
             return ResponseEntity.ok(savedProduct);
 
@@ -65,13 +69,129 @@ public class ProductController {
         }
     }
 
+
+    /*
+        Get All Products
+    */
     @GetMapping
     public List<Product> getAllProducts() {
+
         return productRepository.findAll();
     }
 
+
+    /*
+        Get Single Product
+    */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductById(
+            @PathVariable Long id) {
+
+        return productRepository
+                .findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    /*
+        Update Product
+    */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(
+            @PathVariable Long id,
+            @RequestParam("name") String name,
+            @RequestParam("price") double price,
+            @RequestParam("description") String description,
+            @RequestParam("stock") int stock,
+            @RequestParam(
+                    value = "image",
+                    required = false
+            ) MultipartFile image) {
+
+        try {
+
+            Product product =
+                    productRepository
+                            .findById(id)
+                            .orElse(null);
+
+            if (product == null) {
+
+                return ResponseEntity
+                        .notFound()
+                        .build();
+            }
+
+
+            // Update product details
+
+            product.setName(name);
+
+            product.setPrice(price);
+
+            product.setDescription(description);
+
+            product.setStock(stock);
+
+
+            /*
+                Update image only if
+                seller selects a new image
+            */
+
+            if (image != null && !image.isEmpty()) {
+
+                Path uploadPath =
+                        Paths.get(uploadDirectory);
+
+                if (!Files.exists(uploadPath)) {
+
+                    Files.createDirectories(uploadPath);
+                }
+
+                String fileName =
+                        System.currentTimeMillis()
+                        + "_"
+                        + image.getOriginalFilename();
+
+                Path filePath =
+                        uploadPath.resolve(fileName);
+
+                Files.write(
+                        filePath,
+                        image.getBytes()
+                );
+
+                product.setImagePath(
+                        "/uploads/" + fileName
+                );
+            }
+
+
+            Product updatedProduct =
+                    productRepository.save(product);
+
+            return ResponseEntity.ok(
+                    updatedProduct
+            );
+
+        } catch (IOException e) {
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Image update failed.");
+        }
+    }
+
+
+    /*
+        Delete Product
+    */
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(
+            @PathVariable Long id) {
+
         productRepository.deleteById(id);
     }
 }
