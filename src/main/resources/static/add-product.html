@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Product - Sanjeeswaran-Mart</title>
+
+    <link rel="stylesheet" href="add-product.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- Header -->
+
+    <header class="top-header">
+
+        <h1>🛒 Sanjeeswaran-Mart</h1>
+
+        <p>Seller - Add New Product</p>
+
+    </header>
+
+
+
+    <!-- Main Content -->
+
+    <main>
+
+        <section class="add-product-container">
+
+
+            <h2>Add New Product</h2>
+
+            <p class="form-subtitle">
+                Enter your product details one by one
+            </p>
+
+
+
+            <!-- Product Form -->
+
+            <form id="productForm">
+
+
+                <!-- 1. Product Name -->
+
+                <div class="form-group">
+
+                    <label for="productName">
+                        1. Product Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="productName"
+                        placeholder="Enter product name"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- 2. Price -->
+
+                <div class="form-group">
+
+                    <label for="productPrice">
+                        2. Product Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="productPrice"
+                        placeholder="Enter price in ₹"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- 3. Description -->
+
+                <div class="form-group">
+
+                    <label for="productDescription">
+                        3. Product Description
+                    </label>
+
+                    <textarea
+                        id="productDescription"
+                        placeholder="Enter product description"
+                        rows="5"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- 4. Stock -->
+
+                <div class="form-group">
+
+                    <label for="productStock">
+                        4. Stock Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="productStock"
+                        placeholder="Enter available quantity"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- 5. Image -->
+
+                <div class="form-group">
+
+                    <label for="productImage">
+                        5. Product Image
+                    </label>
+
+                    <input
+                        type="file"
+                        id="productImage"
+                        accept="image/*"
+                        required
+                    >
+
+                    <small>
+                        Select an image for your product.
+                    </small>
+
+                </div>
+
+
+
+                <!-- Message -->
+
+                <p id="productMessage"></p>
+
+
+
+                <!-- Add Product Button -->
+
+                <button
+                    type="submit"
+                    class="add-button"
+                >
+                    ➕ Add Product
+                </button>
+
+
+
+                <!-- Back Button -->
+
+                <button
+                    type="button"
+                    class="back-button"
+                    onclick="goBack()"
+                >
+                    ← Back
+                </button>
+
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+
+    <script src="add-product.js"></script>
+
+</body>
+
+</html>
