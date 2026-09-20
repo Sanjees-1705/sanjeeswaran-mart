@@ -91,7 +91,8 @@ async function loadProducts() {
 
                 <button
                     onclick="addToWishlist(
-                        '${product.name.replace(/'/g, "\\'")}'
+                        '${product.name.replace(/'/g, "\\'")}',
+                         ${product.price}
                     )"
                 >
                     ❤️ Wishlist
@@ -189,9 +190,8 @@ function showCart() {
 */
 function showWishlist() {
 
-    alert(
-        "Wishlist page will be added next."
-    );
+    window.location.href =
+        "wishlist.html";
 
 }
 
@@ -200,8 +200,39 @@ function showWishlist() {
     Add to Wishlist
 */
 function addToWishlist(
-    productName
+    productName,
+    productPrice
 ) {
+
+    let wishlist =
+        JSON.parse(
+            localStorage.getItem("wishlist")
+        ) || [];
+
+    const existingProduct =
+        wishlist.find(function (item) {
+            return item.name === productName;
+        });
+
+    if (existingProduct) {
+
+        alert(
+            productName +
+            " is already in wishlist."
+        );
+
+        return;
+    }
+
+    wishlist.push({
+        name: productName,
+        price: productPrice
+    });
+
+    localStorage.setItem(
+        "wishlist",
+        JSON.stringify(wishlist)
+    );
 
     alert(
         productName +
@@ -218,6 +249,13 @@ function logout() {
 
     window.location.href =
         "login.html";
+
+}
+
+function showOrders() {
+
+    window.location.href =
+        "orders.html";
 
 }
 
