@@ -1,11 +1,13 @@
 package com.sanjeeswaran.sanjeeswaran_mart;
-
+import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+
 @Entity
+@Table(name = "orders")
 public class Order {
 
     @Id
