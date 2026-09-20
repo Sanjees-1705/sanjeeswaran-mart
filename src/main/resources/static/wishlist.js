@@ -49,11 +49,81 @@ function loadWishlist() {
 
         `;
 
+        wishlistItem.innerHTML = `
+
+            <h3>
+                ${item.name}
+            </h3>
+
+            <p>
+               Price: ₹${item.price}
+            </p>
+
+            <button
+                class="cart-button"
+                onclick="addWishlistItemToCart(${index})"
+            >
+                🛒 Add to Cart
+            </button>
+
+            <button
+                class="remove-button"
+                onclick="removeFromWishlist(${index})"
+            >
+                Remove
+            </button>
+
+           `;
+
         wishlistItems.appendChild(
             wishlistItem
         );
 
     });
+}
+
+function addWishlistItemToCart(index) {
+
+    let wishlist =
+        JSON.parse(
+            localStorage.getItem("wishlist")
+        ) || [];
+
+    let cart =
+        JSON.parse(
+            localStorage.getItem("cart")
+        ) || [];
+
+    const item = wishlist[index];
+
+    const existingProduct =
+        cart.find(function (cartItem) {
+            return cartItem.name === item.name;
+        });
+
+    if (existingProduct) {
+
+        existingProduct.quantity += 1;
+
+    } else {
+
+        cart.push({
+            name: item.name,
+            price: item.price,
+            quantity: 1
+        });
+
+    }
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    alert(
+        item.name +
+        " added to cart."
+    );
 }
 
 
